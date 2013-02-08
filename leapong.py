@@ -11,10 +11,10 @@ screen_height = 480
 
 class PongListener(Leap.Listener):
 
-    def __init__(self, pad1, pad2):
+    def __init__(self, pad_left, pad_right):
         Leap.Listener.__init__(self)
-        self.pad1 = pad1
-        self.pad2 = pad2
+        self.pad_left = pad_left
+        self.pad_right = pad_right
 
     def on_init(self, controller):
         print "Initialized"
@@ -33,10 +33,15 @@ class PongListener(Leap.Listener):
         global screen_height
         frame = controller.frame()
         if not frame.hands.empty and len(frame.hands) == 2:
-            hand = frame.hands[0]
-            self.pad1.pos = (self.pad1.pos[0], (1.0 - hand.direction[1]) * screen_height)
-            hand = frame.hands[1]
-            self.pad2.pos = (self.pad2.pos[0], (1.0 - hand.direction[1]) * screen_height)
+            if frame.hands[0].direction[0] > frame.hands[1].direction[0]:
+                hand_left = frame.hands[0]
+                hand_right = frame.hands[1]
+            else:
+                hand_left = frame.hands[1]
+                hand_right = frame.hands[0]
+            print hand_left.direction[1]
+            self.pad_left.pos = (self.pad_left.pos[0], (1.0 - hand_left.direction[1]) * screen_height)
+            self.pad_right.pos = (self.pad_right.pos[0], (1.0 - hand_right.direction[1]) * screen_height)
 
 def main():
 
