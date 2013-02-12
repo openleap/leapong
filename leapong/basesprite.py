@@ -1,39 +1,38 @@
 import os
 import pygame
-from pygame import sprite
 
-class BaseSprite(sprite.Sprite):
-    bitmap_filename = None
-    image = None
-    groups = None
+class BaseSprite():
 
-    @classmethod
-    def load_image(cls):
-        path = os.path.join('assets', cls.bitmap_filename)
-        cls.image = pygame.image.load(path)
-        cls.image.convert()
-
-    def __init__(self, start_pos):
-        sprite.Sprite.__init__(self, self.groups)
+    def __init__(self, start_pos, size):
         self.pos = start_pos
-        self.image = self.image
-        self.rect = self.image.get_rect()
+        self.size = size
 
     def collide(self, base_sprite):
-        if self == base_sprite:
-            return False
-        return pygame.sprite.collide_mask(self, base_sprite)
-        """dx = pos[0] - base_sprite.pos[0] 
-        dy = pos[1] - base_sprite.pos[1]
-        
-        distance = math.hypot(dx, dy)
-        if distance < p1.size + p2.size:
-            return True
-        return False"""
+        left1 = self.pos[0]
+        left2 = base_sprite.pos[0]
+        right1 = self.pos[0] + self.size[0]
+        right2 = base_sprite.pos[0] + base_sprite.size[0]
+        top1 = self.pos[1]
+        top2 = base_sprite.pos[1]
+        bottom1 = self.pos[1] + self.size[1]
+        bottom2 = base_sprite.pos[1] + base_sprite.size[1]
 
+        if bottom1 < top2:
+            return True
+        if top1 > bottom2:
+            return True
+        if right1 < left2:
+            return True
+        if left1 > right2:
+            return True
+
+        return False
 
     def update(self):
-        self.rect.topleft = self.pos
+        pass
+
+    def render(self):
+        pass
 
     def set_position(self, x, y):
         self.pos = (x, y)

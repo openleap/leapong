@@ -3,6 +3,7 @@ import Leap, sys
 import pygame
 from pygame.locals import QUIT, KEYDOWN, K_ESCAPE
 from pygame import sprite
+from pygame.locals import *
 
 from leapong.basesprite import BaseSprite
 
@@ -10,9 +11,19 @@ from leapong.paddle import Paddle
 from leapong.ball import Ball
 import math
 
+from OpenGL.GL import *
+from OpenGL.GLU import *
 
-screen_width = 640
-screen_height = 480
+SCREEN_SIZE = (800, 600)
+
+def enable2D():
+    glViewport (0, 0, SCREEN_SIZE[0], SCREEN_SIZE[1]);
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho (0, SCREEN_SIZE[0], SCREEN_SIZE[1], 0, -10, 10);
+    glMatrixMode (GL_MODELVIEW);
+    glLoadIdentity();
+    glClear(GL_COLOR_BUFFER_BIT)
 
 class PongListener(Leap.Listener):
 
@@ -34,8 +45,6 @@ class PongListener(Leap.Listener):
         print "Exited"
 
     def on_frame(self, controller):
-        global screen_width
-        global screen_height
         frame = controller.frame()
         if not frame.hands.empty and len(frame.hands) == 2:
             if frame.hands[0].direction[0] > frame.hands[1].direction[0]:
@@ -44,47 +53,26 @@ class PongListener(Leap.Listener):
             else:
                 hand_left = frame.hands[1]
                 hand_right = frame.hands[0]
-            self.pad_left.set_position(self.pad_left.pos[0], (1.0 - hand_left.direction[1]) * screen_height)
-            self.pad_right.set_position(self.pad_right.pos[0], (1.0 - hand_right.direction[1]) * screen_height)
+            self.pad_left.set_position(self.pad_left.pos[0], (1.0 - hand_left.direction[1]) * SCREEN_SIZE[1])
+            self.pad_right.set_position(self.pad_right.pos[0], (1.0 - hand_right.direction[1]) * SCREEN_SIZE[1])
 
 def main():
 
-    global screen_width
-    global screen_height
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE, OPENGL|DOUBLEBUF)
+
+    clock = pygame.time.Clock()   
 
     elements_ball = []
     elements_paddle = []
 
-    paddle_width = 10
-    paddle_height = 100
-    padding = 20 
-
-    pygame.init()
-    pygame.mouse.set_visible(0)
-    screen = pygame.display.set_mode((screen_width, screen_height))
-    background = pygame.Surface(screen.get_size())
-    background.fill((0, 0, 0))
-    screen.blit(background, (0, 0))
-    
-    paddle_range = screen.get_rect().copy()
-    paddle_range.width -= 2 * padding 
-    paddle_range.height -= 2 * padding
-    paddle_range.height -= paddle_height
-    paddle_range.left += padding
-    paddle_range.top += padding
-
-    sprites = sprite.Group()
-    Paddle.groups = sprites
-    Ball.groups = sprites
-
-    Paddle.load_image()
-    left_paddle = Paddle((paddle_range.left, paddle_range.top), paddle_range)
-    right_paddle = Paddle((paddle_range.right - paddle_width, paddle_range.top), paddle_range)
+    margin = 20
+    left_paddle = Paddle((0 + margin, 0), (10, 80))
+    right_paddle = Paddle((SCREEN_SIZE[0] - 10 - margin, 0), (10, 80))
     elements_paddle.append(left_paddle)
     elements_paddle.append(right_paddle)
-    Ball.load_image()
-    ball1 = Ball((400, 120), paddle_range)
-    ball2 = Ball((200, 120), paddle_range)
+    ball1 = Ball((5, 1), 10)
+    ball2 = Ball((10, 15), 10)
     elements_ball.append(ball1)
     elements_ball.append(ball2)
     
@@ -92,7 +80,6 @@ def main():
 
     listener = PongListener(left_paddle, right_paddle)
     controller = Leap.Controller()
-
     controller.add_listener(listener)
 
     while going:
@@ -106,18 +93,26 @@ def main():
             for element2 in elements_ball:
                 if element.collide(element2):
                     resolve_collision(element, element2)
-        sprites.clear(screen, background)
-        sprites.update()
-        sprites.draw(screen)
+
+        enable2D()
+        left_paddle.update()
+        right_paddle.update()
+
+        ball1.render()
+        ball2.render()
+
+        ball1.update()
+        ball2.update()
+
+        left_paddle.render()
+        right_paddle.render()
+        
         pygame.display.flip()
 
     controller.remove_listener(listener)
     pygame.quit()
 
 def ball_to_ball(element_1, element_2):
-    #element_1.angle = -element_1.angle
-    #element_2.angle = -element_2.angle
-
     pass
 
 def ball_to_paddle(element_1, element_2):

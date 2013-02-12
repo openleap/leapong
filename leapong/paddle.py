@@ -1,22 +1,20 @@
 from basesprite import BaseSprite
+from OpenGL.GL import *
+from OpenGL.GLU import *
 
 class Paddle(BaseSprite):
-    bitmap_filename = 'paddle.png'
-    UP = -1
-    DOWN = 1
-    STATIONARY = 0
 
-    def __init__(self, start_pos, boundary):
-
-        BaseSprite.__init__(self, start_pos)
-        self.boundary = boundary
+    def __init__(self, start_pos, size):
+        BaseSprite.__init__(self, start_pos, size)
 
     def update(self):
+        pass
 
-        if self.pos[1] < self.boundary.top:
-            self.pos = (self.pos[0], self.boundary.top)
-
-        elif self.pos[1] > self.boundary.bottom:
-            self.pos = (self.pos[0], self.boundary.bottom)
-
-        self.rect.topleft = self.pos
+    def render(self):
+        glBegin(GL_QUADS)
+        glColor3ub(155, 0, 0);
+        glVertex2f(self.pos[0], self.pos[1]);
+        glVertex2f(self.pos[0], self.pos[1] + self.size[1]);
+        glVertex2f(self.pos[0] + self.size[0], self.pos[1] + self.size[1]);
+        glVertex2f(self.pos[0] + self.size[0], self.pos[1]);
+        glEnd()
