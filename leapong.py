@@ -9,6 +9,7 @@ from leapong.basesprite import BaseSprite
 
 from leapong.paddle import Paddle
 from leapong.ball import Ball
+from leapong.collisionfunctions import collision_functions
 import math
 
 from OpenGL.GL import *
@@ -112,24 +113,11 @@ def main():
     controller.remove_listener(listener)
     pygame.quit()
 
-def ball_to_ball(element_1, element_2):
-    pass
-
-def ball_to_paddle(element_1, element_2):
-    element_1.angle = - element_1.angle
-
-def paddle_to_ball(element_1, element_2):
-    ball_to_paddle(element_2, element_1)
-
-collision_functions = {"BallBall" : ball_to_ball, 
-                        "BallPaddle" : ball_to_paddle,
-                        "PaddleBall" : paddle_to_ball}
-
 def resolve_collision(element_1, element_2):
-    global collision_functions
     try:
-        collision_functions["%s%s" % (element_1.__class__.__name__, element_2.__class__.__name__)](element_1, element_2)
+        collision_functions["%s-%s" % (element_1.__class__.__name__, element_2.__class__.__name__)](element_1, element_2)
     except KeyError:
         pass
+
 if __name__ == '__main__':
     main()
