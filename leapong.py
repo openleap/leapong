@@ -52,12 +52,8 @@ class PongListener(Leap.Listener):
     def on_frame(self, controller):
         frame = controller.frame()
         if not frame.hands.is_empty and len(frame.hands) == 2:
-            if frame.hands[0].direction[0] > frame.hands[1].direction[0]:
-                hand_left = frame.hands[0]
-                hand_right = frame.hands[1]
-            else:
-                hand_left = frame.hands[1]
-                hand_right = frame.hands[0]
+            hand_left = frame.hands[0]
+            hand_right = frame.hands[1]
             self.pad_left.set_position(self.pad_left.pos[0], (1.0 - hand_left.direction[1]) * SCREEN_SIZE[1])
             self.pad_right.set_position(self.pad_right.pos[0], (1.0 - hand_right.direction[1]) * SCREEN_SIZE[1])
 
