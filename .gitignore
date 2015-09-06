@@ -1,7 +1,7 @@
 *.py[cod]
 *.so
 *.dll
-
+*.DS_Store
 # Packages
 *.egg
 *.egg-info
@@ -16,6 +16,7 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+venv
 
 # Installer logs
 pip-log.txt
@@ -36,3 +37,4 @@ nosetests.xml
 # Leap stuff if locally
 _Leap*
 Leap.py
+lib/
