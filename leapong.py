@@ -1,16 +1,20 @@
 """ Leapong """
-import Leap, sys
+
+import sys
+sys.path.insert(0, "lib")
+
+import Leap
+import math
 import pygame
+
 from pygame.locals import QUIT, KEYDOWN, K_ESCAPE
 from pygame import sprite
 from pygame.locals import *
 
 from leapong.basesprite import BaseSprite
-
 from leapong.paddle import Paddle
 from leapong.ball import Ball
 from leapong.collisionfunctions import collision_functions
-import math
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -47,7 +51,7 @@ class PongListener(Leap.Listener):
 
     def on_frame(self, controller):
         frame = controller.frame()
-        if not frame.hands.empty and len(frame.hands) == 2:
+        if not frame.hands.is_empty and len(frame.hands) == 2:
             if frame.hands[0].direction[0] > frame.hands[1].direction[0]:
                 hand_left = frame.hands[0]
                 hand_right = frame.hands[1]
@@ -62,7 +66,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE, OPENGL|DOUBLEBUF)
 
-    clock = pygame.time.Clock()   
+    clock = pygame.time.Clock()
 
     elements_ball = []
     elements_paddle = []
@@ -76,7 +80,7 @@ def main():
     ball2 = Ball((10, 15), 10)
     elements_ball.append(ball1)
     elements_ball.append(ball2)
-    
+
     going = True
 
     listener = PongListener(left_paddle, right_paddle)
@@ -107,7 +111,7 @@ def main():
 
         left_paddle.render()
         right_paddle.render()
-        
+
         pygame.display.flip()
 
     controller.remove_listener(listener)
