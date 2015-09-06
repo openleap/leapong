@@ -8,7 +8,7 @@ class Ball(BaseSprite):
     def __init__(self, start_pos, size):
         BaseSprite.__init__(self, start_pos, (size, size))
         self.angle = math.radians(45)
-        self.speed = 0.5
+        self.speed = 2.5
 
     def update(self):
 
