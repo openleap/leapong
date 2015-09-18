@@ -3,7 +3,7 @@ import pygame
 
 from .boundingbox import BoundingBox
 
-class BaseSprite():
+class BaseSprite(object):
 
     def __init__(self, start_pos, size):
         self.boundingbox = BoundingBox(*(start_pos + size))

@@ -8,15 +8,12 @@ class BoundingBox(object):
         self.height = height
 
     def collide(self, bounding_box):
-        if self.y2 < bounding_box.y1:
-            return True
-        if self.y1 > bounding_box.y2:
-            return True
-        if self.x2 < bounding_box.x1:
-            return True
-        if self.x1 > bounding_box.x2:
-            return True
-        return False
+        return not (
+            self.x2 < bounding_box.x1 or
+            bounding_box.x2 < self.x1 or
+            self.y2 < bounding_box.y1 or
+            bounding_box.y2 < self.y1
+        )
 
     @property
     def width(self):
