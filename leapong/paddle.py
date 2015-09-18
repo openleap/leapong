@@ -13,8 +13,8 @@ class Paddle(BaseSprite):
     def render(self):
         glBegin(GL_QUADS)
         glColor3ub(155, 0, 0);
-        glVertex2f(self.pos[0], self.pos[1]);
-        glVertex2f(self.pos[0], self.pos[1] + self.size[1]);
-        glVertex2f(self.pos[0] + self.size[0], self.pos[1] + self.size[1]);
-        glVertex2f(self.pos[0] + self.size[0], self.pos[1]);
+        glVertex2f(self.boundingbox.x1, self.boundingbox.y1);
+        glVertex2f(self.boundingbox.x1, self.boundingbox.y2);
+        glVertex2f(self.boundingbox.x2, self.boundingbox.y2);
+        glVertex2f(self.boundingbox.x2, self.boundingbox.y1);
         glEnd()
