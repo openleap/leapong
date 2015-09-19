@@ -35,7 +35,6 @@ def glut_print(x, y, font, text, r, g, b, a):
     if glIsEnabled(GL_BLEND) :
         blending = True
 
-    #glEnable(GL_BLEND)
     glColor3f(1,1,1)
     glRasterPos2f(x,y)
     for ch in text :
@@ -93,6 +92,19 @@ def main():
 
     while going:
 
+        frame = controller.frame()
+        if not frame.hands.is_empty and len(frame.hands) == 2:
+            hand_left = frame.hands[0]
+            hand_right = frame.hands[1]
+            hand_left_direction = hand_left.direction[1] if hand_left.direction[1] >= 0 else 0
+            hand_right_direction = hand_right.direction[1] if hand_right.direction[1] >= 0 else 0
+            left_paddle.set_position(
+                left_paddle.boundingbox.x1, (1.0 - hand_left_direction) * (SCREEN_SIZE[1] - 10)
+            )
+            right_paddle.set_position(
+                right_paddle.boundingbox.x1, (1.0 - hand_right_direction) * (SCREEN_SIZE[1] - 10)
+            )
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 going = False
@@ -100,7 +112,6 @@ def main():
                 going = False
 
         for element in elements_paddle:
-            element.freeze = False
             for element2 in elements_border:
                 if element.collide(element2):
                     resolve_collision(element, element2)
@@ -125,17 +136,6 @@ def main():
 
         ball1.render()
         ball1.update()
-
-        frame = controller.frame()
-        if not frame.hands.is_empty and len(frame.hands) == 2:
-            hand_left = frame.hands[0]
-            hand_right = frame.hands[1]
-            left_paddle.set_position(
-                left_paddle.boundingbox.x1, (1.0 - hand_left.direction[1]) * SCREEN_SIZE[1]
-            )
-            right_paddle.set_position(
-                right_paddle.boundingbox.x1, (1.0 - hand_right.direction[1]) * SCREEN_SIZE[1]
-            )
 
         left_paddle.render()
         right_paddle.render()

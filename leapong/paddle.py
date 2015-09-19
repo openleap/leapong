@@ -18,6 +18,3 @@ class Paddle(BaseSprite, object):
         glVertex2f(self.boundingbox.x2, self.boundingbox.y2);
         glVertex2f(self.boundingbox.x2, self.boundingbox.y1);
         glEnd()
-
-    def set_position(self, x, y):
-        super(Paddle, self).set_position(x, y)
