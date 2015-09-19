@@ -24,6 +24,12 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
+from nanpy import SerialManager, Tone, Servo
+import time
+
+connection = SerialManager(device='/dev/tty.usbmodem1431')
+servo = Servo(7, connection=connection)
+tone = Tone(11, connection=connection)
 
 SCREEN_SIZE = (800, 600)
 
@@ -124,6 +130,8 @@ def main():
         for element in elements_ball:
             for element2 in elements_goal:
                 if element.collide(element2):
+                    tone.play(Tone.NOTE_C4 , 100)
+                    tone.stop()
                     resolve_collision(element, element2)
                     print "{0} - {1}".format(goal_pl_1.points, goal_pl_2.points)
 
@@ -136,6 +144,8 @@ def main():
 
         ball1.render()
         ball1.update()
+
+        servo.write(ball1.boundingbox.x1 * (180. / SCREEN_SIZE[0]))
 
         left_paddle.render()
         right_paddle.render()
