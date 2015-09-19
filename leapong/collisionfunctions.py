@@ -24,7 +24,7 @@ def border_to_ball(element_1, element_2):
     ball_to_border(element_2, element_1)
 
 def paddle_to_border(element_1, element_2):
-    element_1.freeze = True
+    print "BORDER!!!"
 
 def border_to_paddle(element_1, element_2):
     paddle_to_border(element_2, element_1)

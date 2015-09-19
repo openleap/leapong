@@ -23,7 +23,9 @@ from leapong.collisionfunctions import collision_functions
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
+
 SCREEN_SIZE = (800, 600)
+
 
 def enable2D():
     glViewport (0, 0, SCREEN_SIZE[0], SCREEN_SIZE[1]);
@@ -34,36 +36,6 @@ def enable2D():
     glLoadIdentity();
     glClear(GL_COLOR_BUFFER_BIT)
 
-class PongListener(Leap.Listener):
-
-    def __init__(self, pad_left, pad_right):
-        Leap.Listener.__init__(self)
-        self.pad_left = pad_left
-        self.pad_right = pad_right
-
-    def on_init(self, controller):
-        print "Initialized"
-
-    def on_connect(self, controller):
-        print "Connected"
-
-    def on_disconnect(self, controller):
-        print "Disconnected"
-
-    def on_exit(self, controller):
-        print "Exited"
-
-    def on_frame(self, controller):
-        frame = controller.frame()
-        if not frame.hands.is_empty and len(frame.hands) == 2:
-            hand_left = frame.hands[0]
-            hand_right = frame.hands[1]
-            self.pad_left.set_position(
-                self.pad_left.boundingbox.x1, (1.0 - hand_left.direction[1]) * SCREEN_SIZE[1]
-            )
-            self.pad_right.set_position(
-                self.pad_right.boundingbox.x1, (1.0 - hand_right.direction[1]) * SCREEN_SIZE[1]
-            )
 
 def main():
 
@@ -99,11 +71,10 @@ def main():
 
     going = True
 
-    listener = PongListener(left_paddle, right_paddle)
     controller = Leap.Controller()
-    controller.add_listener(listener)
 
     while going:
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 going = False
@@ -133,15 +104,23 @@ def main():
                     resolve_collision(element, element2)
 
         enable2D()
-        left_paddle.update()
-        right_paddle.update()
 
         ball1.render()
         ball1.update()
 
+        frame = controller.frame()
+        if not frame.hands.is_empty and len(frame.hands) == 2:
+            hand_left = frame.hands[0]
+            hand_right = frame.hands[1]
+            left_paddle.set_position(
+                left_paddle.boundingbox.x1, (1.0 - hand_left.direction[1]) * SCREEN_SIZE[1]
+            )
+            right_paddle.set_position(
+                right_paddle.boundingbox.x1, (1.0 - hand_right.direction[1]) * SCREEN_SIZE[1]
+            )
+
         left_paddle.render()
         right_paddle.render()
-
         goal_pl_1.render()
         goal_pl_2.render()
         border_top.render()
@@ -149,7 +128,6 @@ def main():
 
         pygame.display.flip()
 
-    controller.remove_listener(listener)
     pygame.quit()
 
 def resolve_collision(element_1, element_2):

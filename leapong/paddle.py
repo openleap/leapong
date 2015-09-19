@@ -6,7 +6,6 @@ class Paddle(BaseSprite, object):
 
     def __init__(self, start_pos, size):
         BaseSprite.__init__(self, start_pos, size)
-        self.freeze = False
 
     def update(self):
         pass
@@ -21,7 +20,4 @@ class Paddle(BaseSprite, object):
         glEnd()
 
     def set_position(self, x, y):
-        if self.freeze:
-            x = self.boundingbox.x1
-            y = self.boundingbox.y1
         super(Paddle, self).set_position(x, y)
