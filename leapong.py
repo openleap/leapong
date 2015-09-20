@@ -24,12 +24,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
-from nanpy import SerialManager, Tone, Servo
 import time
-
-connection = SerialManager(device='/dev/tty.usbmodem1431')
-servo = Servo(7, connection=connection)
-tone = Tone(11, connection=connection)
 
 SCREEN_SIZE = (800, 600)
 
@@ -87,6 +82,7 @@ def main():
     elements_goal.append(goal_pl_2)
 
     border_top = Border((5, 0), (795, 5))
+    border_top.top = True
     elements_border.append(border_top)
 
     border_bottom = Border((5, 595), (795, 5))
@@ -104,11 +100,15 @@ def main():
             hand_right = frame.hands[1]
             hand_left_direction = hand_left.direction[1] if hand_left.direction[1] >= 0 else 0
             hand_right_direction = hand_right.direction[1] if hand_right.direction[1] >= 0 else 0
+
+            hand_left_direction = hand_left_direction if hand_left_direction <= 0.6 else 0.6
+            hand_right_direction = hand_right_direction if hand_right_direction <= 0.6 else 0.6
+
             left_paddle.set_position(
-                left_paddle.boundingbox.x1, (1.0 - hand_left_direction) * (SCREEN_SIZE[1] - 10)
+                left_paddle.boundingbox.x1, (0.6 - hand_left_direction) * (1000)
             )
             right_paddle.set_position(
-                right_paddle.boundingbox.x1, (1.0 - hand_right_direction) * (SCREEN_SIZE[1] - 10)
+                right_paddle.boundingbox.x1, (0.6 - hand_right_direction) * (1000)
             )
 
         for event in pygame.event.get():
@@ -130,8 +130,6 @@ def main():
         for element in elements_ball:
             for element2 in elements_goal:
                 if element.collide(element2):
-                    tone.play(Tone.NOTE_C4 , 100)
-                    tone.stop()
                     resolve_collision(element, element2)
                     print "{0} - {1}".format(goal_pl_1.points, goal_pl_2.points)
 
@@ -144,8 +142,6 @@ def main():
 
         ball1.render()
         ball1.update()
-
-        servo.write(ball1.boundingbox.x1 * (180. / SCREEN_SIZE[0]))
 
         left_paddle.render()
         right_paddle.render()
