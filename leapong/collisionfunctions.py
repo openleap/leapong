@@ -1,5 +1,5 @@
 import math
-
+from random import random
 
 def ball_to_ball(element_1, element_2):
     pass
@@ -34,7 +34,11 @@ def paddle_to_ball(element_1, element_2):
     ball_to_paddle(element_2, element_1)
 
 def ball_to_goal(element_1, element_2):
-    element_1.angle = math.pi - element_1.angle
+    rand = int(random() * 100) % 2
+    if rand:
+        element_1.angle = math.pi - element_1.angle
+    else:
+        element_1.angle = - element_1.angle
     element_1.set_position (300, 300)
     element_2.points += 1
 
@@ -48,16 +52,18 @@ def border_to_ball(element_1, element_2):
     ball_to_border(element_2, element_1)
 
 def paddle_to_border(element_1, element_2):
-    if element_1.boundingbox.y1 <= element_2.boundingbox.y2:
-        element_1.set_position (
-            element_1.boundingbox.x1,
-            element_2.boundingbox.y2
-        )
-    if element_1.boundingbox.y2 >= element_2.boundingbox.y1:
-        element_1.set_position (
-            element_1.boundingbox.x1,
-            element_2.boundingbox.y1 - (element_1.boundingbox.y2 - element_2.boundingbox.y1)
-        )
+    if element_2.top:
+        if element_1.boundingbox.y1 <= element_2.boundingbox.y2:
+            element_1.set_position (
+                element_1.boundingbox.x1,
+                element_2.boundingbox.y2
+            )
+    else:
+        if element_1.boundingbox.y2 >= element_2.boundingbox.y1:
+            element_1.set_position (
+                element_1.boundingbox.x1,
+                element_1.boundingbox.y1 - (element_1.boundingbox.y2 - element_2.boundingbox.y2)
+            )
 
 def border_to_paddle(element_1, element_2):
     paddle_to_border(element_2, element_1)

@@ -24,6 +24,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
+import time
 
 SCREEN_SIZE = (800, 600)
 
@@ -81,6 +82,7 @@ def main():
     elements_goal.append(goal_pl_2)
 
     border_top = Border((5, 0), (795, 5))
+    border_top.top = True
     elements_border.append(border_top)
 
     border_bottom = Border((5, 595), (795, 5))
@@ -98,11 +100,15 @@ def main():
             hand_right = frame.hands[1]
             hand_left_direction = hand_left.direction[1] if hand_left.direction[1] >= 0 else 0
             hand_right_direction = hand_right.direction[1] if hand_right.direction[1] >= 0 else 0
+
+            hand_left_direction = hand_left_direction if hand_left_direction <= 0.6 else 0.6
+            hand_right_direction = hand_right_direction if hand_right_direction <= 0.6 else 0.6
+
             left_paddle.set_position(
-                left_paddle.boundingbox.x1, (1.0 - hand_left_direction) * (SCREEN_SIZE[1] - 10)
+                left_paddle.boundingbox.x1, (0.6 - hand_left_direction) * (1000)
             )
             right_paddle.set_position(
-                right_paddle.boundingbox.x1, (1.0 - hand_right_direction) * (SCREEN_SIZE[1] - 10)
+                right_paddle.boundingbox.x1, (0.6 - hand_right_direction) * (1000)
             )
 
         for event in pygame.event.get():

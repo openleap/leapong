@@ -7,6 +7,7 @@ class Border(BaseSprite, object):
 
     def __init__(self, start_pos, size):
         BaseSprite.__init__(self, start_pos, size)
+        self.top = False
 
     def update(self):
         pass
