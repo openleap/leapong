@@ -38,6 +38,7 @@ def glut_print(x, y, font, text, r, g, b, a):
 
     glColor3f(1,1,1)
     glRasterPos2f(x,y)
+    glutInit(1, "Something")
     for ch in text :
         glutBitmapCharacter( font , ctypes.c_int( ord(ch) ) )
 
