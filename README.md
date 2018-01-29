@@ -1,6 +1,6 @@
-###An <a href="openleap.org">OpenLeap</a> project started by @astagi.
+### An <a href="openleap.org">OpenLeap</a> project started by @astagi.
 
-# Leapong
+# Leapong
 
 Pong built with Pygame and Leap Motion.
 
